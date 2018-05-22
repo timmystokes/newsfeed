@@ -9,6 +9,8 @@ This is a simple newsfeed app that I put together for Studio 71, it takes a stre
 - Like posts
 - Caches and retrieve liked and favorited posts
 - Filter by liked or favorited posts
+- Pagination functionality
+
 
 
 # Setup:
