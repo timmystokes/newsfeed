@@ -23,6 +23,7 @@ class App extends Component {
     this.state = {
       feed: {
         items: [],
+        filteredItems: [],
         displayItems: [],
         filters: {
           type: "*",
@@ -51,6 +52,9 @@ class App extends Component {
     this.getPage();
   }
 
+  /*
+  handles all of the filtering functionality like a master controller
+  */
   filterItems = () => {
     const { type, query, interactions } = this.state.feed.filters;
 
@@ -61,6 +65,7 @@ class App extends Component {
 
     const filterInteractions = x => {
       if (interactions.length < 1) return true;
+      console.log(interactions)
       let results = interactions.map(
         interaction =>
           this.state.feed.interactions[interaction].indexOf(x.entity_id) > -1
@@ -68,40 +73,48 @@ class App extends Component {
       return results.every(result => result);
     };
 
-    const items = this.state.feed.items
+    const filteredItems = this.state.feed.items
       .filter(filterInteractions)
       .filter(byType)
       .filter(searchByMessage);
 
     const feed = Object.assign(this.state.feed, {
-      displayItems: items,
+      filteredItems: filteredItems,
       filters: this.state.feed.filters,
       interactions: this.state.feed.interactions
     });
 
     const pagingSettings = this.state.pagingSettings;
-    pagingSettings.pages = Math.ceil(feed.displayItems.length / pagingSettings.perPage);
+    pagingSettings.pages = Math.ceil(
+      feed.filteredItems.length / pagingSettings.perPage
+    );
 
     this.setState({ feed, pagingSettings });
+    this.getPage(pagingSettings.activePage);
   };
 
+
+  // sets currently active page, then invokes getPage method to fetch it's pagination data
   handlePaginationChange = (e, { activePage }) => {
-    const pagingSettings = Object.assign({}, this.state.pagingSettings);
+    const { pagingSettings } = this.state;
     pagingSettings.activePage = activePage;
     this.setState({ pagingSettings });
     this.getPage(activePage);
   };
 
-  initializeStoredInteractions = () => {
-    const feed = Object.assign({}, this.state.feed);
 
+  // grabs data from cached localStorage and sets it to state's feed data
+  initializeStoredInteractions = () => {
+    const { feed } = this.state;
     const stored = localStorage.getItem("newsFeedInteractions");
+
     if (typeof stored === "string") {
       feed.interactions = JSON.parse(stored);
       this.setState({ feed });
     }
   };
 
+  // toggles the interactions, i.e. (likes, favorites) filters, then invokes filter method
   toggleInteraction = (item, type) => {
     const state = Object.assign({}, this.state);
     let index = state.feed.interactions[type].indexOf(item.entity_id);
@@ -116,65 +129,65 @@ class App extends Component {
 
     this.filterItems();
 
-    // cache like and favorite settings in browser's localStorage
     localStorage.setItem(
       "newsFeedInteractions",
       JSON.stringify(state.feed.interactions)
     );
   };
 
-  filterFeedByInteraction = type => {
-    const feed = Object.assign({}, this.state.feed);
-    let index = feed.filters.interactions.indexOf(type);
 
-    if (index > -1) {
-      feed.filters.interactions.splice(index, 1);
+  /* 
+   sets the applied filters, i.e. interactions (likes, favorites), 
+   searching by message, and filtering by feed item type
+   sets pagination settings, then invokes filter method
+   */
+  filterBy = (type, value = null) => {
+    const { feed, pagingSettings } = this.state;
+
+    if (type === "likes" || type === "favorites") {
+      const index = feed.filters.interactions.indexOf(type);
+      if (index > -1) {
+        feed.filters.interactions.splice(index, 1);
+      } else {
+        feed.filters.interactions.push(type);
+      }
     } else {
-      feed.filters.interactions.push(type);
+      feed.filters[type] = value;
     }
-    this.setState({ feed });
+
+    pagingSettings.activePage = 1;
+
+    this.setState({ feed, pagingSettings });
     this.filterItems();
   };
 
-  filterFeedByType = type => {
-    const state = Object.assign({}, this.state);
-    state.feed.filters.type = type;
-    this.setState({ state });
-    this.filterItems();
-  };
 
-  searchByMessage = query => {
-    const state = Object.assign({}, this.state);
-    state.feed.filters.query = query;
-    this.setState({ state });
-    this.filterItems();
-  };
-
+  // gets the page and changes display items to reflect the current pagination
   getPage(page = 1) {
     let { loading } = this.state;
     const { feed, pagingSettings } = this.state;
 
     loading = true;
     this.setState({ loading });
-    
+
     const start = (page - 1) * pagingSettings.perPage;
     const end = start + pagingSettings.perPage;
-    feed.displayItems = feed.items.slice(start, end);
-    console.log(feed.displayItems);
+    feed.displayItems = feed.filteredItems.slice(start, end);
     loading = false;
     setTimeout(() => {
       this.setState({ feed, loading });
     }, 300);
   }
 
+  // gets the feed data and initial paging settings
   mockGetJsonFeed = () => {
-    const pagingSettings = this.state.pagingSettings;
-    const feed = Object.assign(dataFeed, {
-      displayItems: dataFeed.items,
-      filters: this.state.feed.filters,
-      interactions: this.state.feed.interactions
-    });
+    let { feed, pagingSettings } = this.state;
+
+    feed = Object.assign(feed, dataFeed);
+    feed.displayItems = [];
+    feed.filteredItems = dataFeed.items;
     pagingSettings.pages = Math.ceil(feed.total / pagingSettings.perPage);
+
     this.setState({ feed, pagingSettings });
   };
 
@@ -191,11 +204,10 @@ class App extends Component {
 
           <Grid container padded="vertically" divided="vertically">
             <Grid.Row columns={1}>
-              <Grid.Column>
+              <Grid.Column className="menu-container">
                 <FeedControls
                   activeFilters={this.state.feed.filters}
-                  filterFeedByType={this.filterFeedByType}
-                  filterFeedByInteraction={this.filterFeedByInteraction}
+                  filterBy={this.filterBy}
                   handleSearchChange={this.searchByMessage}
                 />
               </Grid.Column>

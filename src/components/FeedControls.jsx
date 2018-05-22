@@ -2,6 +2,9 @@ import React from "react";
 import _ from "lodash";
 import { Dropdown, Icon, Menu, Search } from "semantic-ui-react";
 
+
+// I could minify/fold this, or store it externally, but I don't think it's too clunky for now
+// As this newfeed scaled up though, and more types became apparent, we would store this collection externally
 const typeOptions = [
   {
     value: "*",
@@ -52,22 +55,13 @@ class FeedControls extends React.Component {
     };
   }
 
-  filterFeedByType = value => {
-    this.props.filterFeedByType(value);
-  };
-
-  filterFeedByInteraction = value => {
-    this.props.filterFeedByInteraction(value);
-  };
-
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value });
 
-    this.props.handleSearchChange(value);
+    this.props.filterBy("query", value);
   };
 
   render() {
-    const { isLoading, value, results } = this.state;
     const favoritesFiltered =
       this.props.activeFilters.interactions.indexOf("favorites") > -1;
     const likesFiltered =
@@ -80,16 +74,16 @@ class FeedControls extends React.Component {
               leading: true
             })}
             showNoResults={false}
-            value={value}
             placeholder="Search by message"
           />
         </Menu.Item>
         <Menu.Item>
           <Dropdown
-            onChange={(e, { value }) => this.filterFeedByType(value)}
+            onChange={(e, { value }) => this.props.filterBy("type", value)}
             selection
             options={typeOptions}
             placeholder="Select type"
+            size="huge"
           />
         </Menu.Item>
         <Menu.Menu position="right">
@@ -97,14 +91,14 @@ class FeedControls extends React.Component {
             <Icon
               className="star icon"
               color={likesFiltered ? "yellow" : "grey"}
-              onClick={e => this.filterFeedByInteraction("likes")}
+              onClick={e => this.props.filterBy("likes")}
             />
           </Menu.Item>
           <Menu.Item active={favoritesFiltered}>
             <Icon
               className="heart icon"
               color={favoritesFiltered ? "red" : "grey"}
-              onClick={e => this.filterFeedByInteraction("favorites")}
+              onClick={e => this.props.filterBy("favorites")}
             />
           </Menu.Item>
         </Menu.Menu>

@@ -2,13 +2,9 @@ import React from "react";
 
 import FeedItem from "./FeedItem";
 
-import { Card, Header, Grid, Transition } from "semantic-ui-react";
+import { Card, Header, Grid } from "semantic-ui-react";
 
 class NewsFeedItemList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const items = this.props.items.map((item, index) => {
       const liked = this.props.interactions.likes.indexOf(item.entity_id) > -1;
