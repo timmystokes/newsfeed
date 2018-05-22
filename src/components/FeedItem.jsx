@@ -2,6 +2,7 @@ import React from "react";
 
 import { Card, Grid, Icon, Image, Label } from "semantic-ui-react";
 
+// pattern from stack overflow - regex to grab triplets of digits for formatting numbers with comma delimniting
 const PATTERN = /\B(?=(\d{3})+(?!\d))/g;
 
 class FeedItem extends React.Component {
