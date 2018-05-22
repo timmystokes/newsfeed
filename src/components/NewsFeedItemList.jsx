@@ -19,7 +19,7 @@ class NewsFeedItemList extends React.Component {
     );
       return component;
     });
-  return items.length > 0 ? (<Feed> {items} </Feed>) : (<Header as="h1">No items match filtering criteria.</Header>);
+  return items.length > 0 ? (<Feed> {items} </Feed>) : (<Header as="h1">No items match this filtering criteria</Header>);
   }
 }
 
