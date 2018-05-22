@@ -1,8 +1,5 @@
 import React from "react";
 
-import SubscribeMilestoneFeedItem from "./SubscribeMilestoneFeedItem";
-import StatsTrendFeedItem from "./StatsTrendFeedItem";
-import ChannelOverlapFeedItem from "./ChannelOverlapFeedItem";
 import FeedItem from "./FeedItem";
 
 import { Feed, Header, Transition } from "semantic-ui-react";

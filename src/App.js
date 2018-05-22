@@ -31,7 +31,7 @@ class App extends Component {
     filterItems = () => {
 
         const { type, query } = this.state.feed.filters;
-        
+
         // if type is "*" don't filter, otherwise filter to match types
         const byType = item => type === '*' ? item : item.type === type;            
         const searchByMessage = item => new RegExp(_.escapeRegExp(query), "i").test(item.message);
@@ -63,7 +63,6 @@ class App extends Component {
 
     mockGetJsonFeed = () => {
         // this method simulates a 300ms AJAX call to fetch the feed data
-
         const feed = Object.assign(dataFeed, { displayItems: dataFeed.items, filters: this.state.feed.filters });
         
         setTimeout(() => {

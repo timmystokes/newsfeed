@@ -76,11 +76,11 @@ class FeedControls extends React.Component {
           placeholder="Search by message"
         />
         <Dropdown
-          placeholder="Select type"
+          onChange={(e, { value }) => this.filterFeedByType(value)}          
           fluid
           selection
           options={typeOptions}
-          onChange={(e, { value }) => this.filterFeedByType(value)}
+          placeholder="Select type"
         />
       </Menu>
     );
