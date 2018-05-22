@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Card, Feed, Image, Label } from "semantic-ui-react";
+import { Card, Grid, Icon, Image, Label } from "semantic-ui-react";
 
 class FeedItem extends React.Component {
   render() {
@@ -12,19 +12,50 @@ class FeedItem extends React.Component {
         ""
       );
 
+    const interactionMenu = this.props.item.id ? (
+      <Card.Content extra>
+        <Icon
+          className="right floated like icon"
+          color={this.props.favorited ? "red" : "grey"}
+          onClick={e =>
+            this.props.handleInteraction(this.props.item, "favorites")
+          }
+        />
+        <Icon
+          className="right floated star icon"
+          color={this.props.liked ? "yellow" : "grey"}
+          onClick={e => this.props.handleInteraction(this.props.item, "likes")}
+        />
+      </Card.Content>
+    ) : (
+      ""
+    );
+
     return (
-      <Card>
+      <Card fluid>
         <Card.Content>
-          <i className="right floated like icon"></i>    
-          <i className="right floated star icon"></i>
-          <Image floated="left" size="tiny" src={this.props.item.thumbnail} />
-          <Feed.Event>
-            <Feed.Label />
-            <Feed.Content>
-              <Feed.Summary as="span">{this.props.item.message}</Feed.Summary>
-              {estimated_subscribers}
-            </Feed.Content>
-          </Feed.Event>
+          <Grid>
+            <Grid.Row columns={12}>
+              <Grid.Column width={2}>
+                <Image
+                  floated="left"
+                  size="tiny"
+                  src={this.props.item.thumbnail}
+                />
+              </Grid.Column>
+              <Grid.Column width={12} verticalAlign="middle">
+                <Card.Description as="span">
+                  {this.props.item.message}
+                </Card.Description>
+
+                {estimated_subscribers}
+              </Grid.Column>
+
+              <Grid.Column width={2} verticalAlign="middle">
+              {interactionMenu}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Card.Content>
       </Card>
     );
