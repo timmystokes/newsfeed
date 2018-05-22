@@ -18,4 +18,4 @@ to install:
 to run: 
 > npm start
 
-### Now open browser and go to localhost:3000 and voila!`
+Now open browser and go to 'localhost:3000' and voila!
