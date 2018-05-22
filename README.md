@@ -1,4 +1,4 @@
-#Newsfeed App
+# Newsfeed App
 
 This is a simple newsfeed app that I put together for Studio 71, it takes a stream of JSON newsfeed items and creates interesting data interactions.
 
@@ -11,11 +11,11 @@ This is a simple newsfeed app that I put together for Studio 71, it takes a stre
 - Filter by liked or favorited posts
 
 
-#Setup:
+# Setup:
 to install: 
 > npm install
 
 to run: 
 > npm start
 
-### Now open browser and go to localhost:3000 and voila!
+### Now open browser and go to localhost:3000 and voila!`
