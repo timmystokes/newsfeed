@@ -43,3 +43,11 @@
 .ui.pagination.menu {
   margin: 1rem auto 0;
 }
+
+.ui.stackable.menu {
+  background: #e6f0fa;
+}
+
+.heart.icon, .star.icon {
+  cursor: pointer;
+}
