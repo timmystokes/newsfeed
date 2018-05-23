@@ -2,7 +2,6 @@ import React from "react";
 import _ from "lodash";
 import { Dropdown, Icon, Menu, Search } from "semantic-ui-react";
 
-
 // I could minify/fold this, or store it externally, but I don't think it's too clunky for now
 // As this newfeed scaled up though, and more types became apparent, we would store this collection externally
 const typeOptions = [
@@ -44,6 +43,23 @@ const typeOptions = [
   }
 ];
 
+const perPageOptions = [
+  {
+    value: 5,
+    text: "5 items per page"
+  },
+  {
+    value: 10,
+    text: "10 items per page"
+  },  {
+    value: 15,
+    text: "15 items per page"
+  },  {
+    value: 20,
+    text: "20 items per page"
+  },
+];
+
 class FeedControls extends React.Component {
   constructor(props) {
     super(props);
@@ -83,6 +99,15 @@ class FeedControls extends React.Component {
             selection
             options={typeOptions}
             placeholder="Select type"
+            size="huge"
+          />
+        </Menu.Item>
+        <Menu.Item>
+          <Dropdown
+            onChange={(e, { value }) => this.props.handlePerPageChange(value)}
+            selection
+            options={perPageOptions}
+            placeholder="Select items per page"
             size="huge"
           />
         </Menu.Item>

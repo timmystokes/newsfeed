@@ -102,6 +102,14 @@ class App extends Component {
     this.getPage(activePage);
   };
 
+  // sets perPage value (from dropdown), then invokes getPage with updated pagination data
+  handlePerPageChange = (perPage) => {
+    const { pagingSettings } = this.state;
+    pagingSettings.perPage = perPage;
+    pagingSettings.pages = Math.ceil(dataFeed.total / pagingSettings.perPage);
+    this.setState({ pagingSettings });
+    this.getPage();
+  }
 
   // grabs data from cached localStorage and sets it to state's feed data
   initializeStoredInteractions = () => {
@@ -139,7 +147,7 @@ class App extends Component {
   /* 
    sets the applied filters, i.e. interactions (likes, favorites), 
    searching by message, and filtering by feed item type
-   sets pagination settings, then invokes filter method
+   sets pagination settings, then invokes filter manager method
    */
   filterBy = (type, value = null) => {
     const { feed, pagingSettings } = this.state;
@@ -209,6 +217,7 @@ class App extends Component {
                   activeFilters={this.state.feed.filters}
                   filterBy={this.filterBy}
                   handleSearchChange={this.searchByMessage}
+                  handlePerPageChange={this.handlePerPageChange}
                 />
               </Grid.Column>
             </Grid.Row>
