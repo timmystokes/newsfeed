@@ -12,7 +12,6 @@ This is a simple newsfeed app that I put together for Studio 71, it takes a stre
 - Pagination functionality
 
 
-
 # Setup:
 to install: 
 > npm install
@@ -21,3 +20,7 @@ to run:
 > npm start
 
 Now open browser and go to 'localhost:3000' and voila!
+
+
+## Additional Notes:
+- The reason you can't like and favorite every item is because some of the items in the newsfeed aren't currently being keyed, this could easily be remedied by hashing all the data feed items though!

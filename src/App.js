@@ -4,6 +4,7 @@ import "./App.css";
 import _ from "lodash";
 import FeedControls from "./components/FeedControls";
 import NewsFeedItemList from "./components/NewsFeedItemList";
+import dataFeed from "./data/feed";
 
 import {
   Dimmer,
@@ -13,8 +14,6 @@ import {
   Pagination,
   Segment
 } from "semantic-ui-react";
-
-import dataFeed from "./data/feed";
 
 class App extends Component {
   constructor(props) {
@@ -57,6 +56,7 @@ class App extends Component {
   */
   filterItems = () => {
     const { type, query, interactions } = this.state.feed.filters;
+    console.log(this.state)
 
     // if type is "*" don't filter, otherwise filter to match types
     const byType = item => (type === "*" ? item : item.type === type);
@@ -65,7 +65,6 @@ class App extends Component {
 
     const filterInteractions = x => {
       if (interactions.length < 1) return true;
-      console.log(interactions)
       let results = interactions.map(
         interaction =>
           this.state.feed.interactions[interaction].indexOf(x.entity_id) > -1
@@ -127,6 +126,7 @@ class App extends Component {
     const state = Object.assign({}, this.state);
     let index = state.feed.interactions[type].indexOf(item.entity_id);
 
+    // remove if already exists (toggle off), otherwise push to interactions lists
     if (index > -1) {
       state.feed.interactions[type].splice(index, 1);
     } else {
@@ -134,7 +134,6 @@ class App extends Component {
     }
 
     this.setState({ state });
-
     this.filterItems();
 
     localStorage.setItem(
